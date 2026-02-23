@@ -1,13 +1,10 @@
-// js/main.js
-
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. 언어 감지 및 설정 (lang.js가 먼저 로드되어 있어야 함)
+    // 1. 언어 감지 및 설정
     const userLang = navigator.language.slice(0, 2);
-    // langData가 없으면 에러 방지를 위해 빈 객체 처리
     const isLangLoaded = typeof langData !== 'undefined';
     const currentLang = (isLangLoaded && langData[userLang]) ? userLang : 'en';
     
-    // 텍스트 가져오기 헬퍼 함수
+    // 텍스트 가져오기
     function getText(data) {
         if (typeof data === 'string') return data;
         return data[currentLang] || data['en'] || "";
@@ -28,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. 프로젝트 렌더링
     const projectsGrid = document.getElementById("projects-grid");
     
-    // projectData가 로드되었는지 확인
     if (typeof projectData === 'undefined') {
         console.error("Error: projectData is not loaded. Check js/projects.js");
         return;
@@ -41,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
             : projectData.filter(p => p.category === filter);
 
         filtered.forEach(project => {
-            // 봇이 찍은 'screenshot1.png' (PC 메인)을 썸네일로 사용
             const thumbUrl = `img/${project.folderName}/screenshot1.png`;
             const pTitle = getText(project.title);
             const pDesc = getText(project.description);
@@ -49,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement("div");
             card.className = "project-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform duration-300 border border-gray-100 flex flex-col h-full";
             
-            // [이미지 로딩] onerror 처리로 무한 로딩 방지
             card.innerHTML = `
                 <div class="h-48 bg-gray-100 overflow-hidden relative border-b border-gray-100">
                     <img 
@@ -70,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
             `;
-            // 카드 클릭 시 상세 모달 열기
             card.addEventListener('click', () => openProjectModal(project));
             projectsGrid.appendChild(card);
         });
@@ -81,12 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. 필터 버튼 이벤트
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            // 버튼 스타일 초기화
             document.querySelectorAll('.filter-btn').forEach(b => {
                 b.classList.remove('bg-blue-600', 'text-white', 'border-transparent');
                 b.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
             });
-            // 선택된 버튼 스타일 적용
             e.target.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
             e.target.classList.add('bg-blue-600', 'text-white', 'border-transparent');
             
@@ -101,6 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const descEl = document.getElementById('modal-desc');
     const linkEl = document.getElementById('modal-link');
     const sliderEl = document.getElementById('modal-slider');
+    
+    // [추가됨] QR 코드 엘리먼트
+    const qrContainer = document.getElementById('qr-container');
+    const qrImg = document.getElementById('modal-qr');
 
     function openProjectModal(project) {
         titleEl.innerText = getText(project.title);
@@ -109,11 +104,30 @@ document.addEventListener("DOMContentLoaded", () => {
         linkEl.href = project.link;
         linkEl.innerText = currentLang === 'ko' ? "사이트 방문하기" : "Visit Website";
 
-        // Buy Me a Coffee 버튼 링크 연결
         const bmcBtn = document.getElementById('bmc-btn-modal');
         if(bmcBtn) bmcBtn.href = "https://buymeacoffee.com/tonycho";
 
-        // 봇이 생성한 4장의 이미지 로드 순서 정의
+        // [QR 코드 처리 로직]
+        if(qrImg && qrContainer) {
+            // 초기화: 일단 숨김
+            qrContainer.classList.add('hidden');
+            qrImg.src = '';
+            
+            // 이미지 경로 설정
+            const qrPath = `img/${project.folderName}/QR.png`;
+            qrImg.src = qrPath;
+
+            // 이미지가 성공적으로 로드되면 보임
+            qrImg.onload = function() {
+                qrContainer.classList.remove('hidden');
+            };
+            // 로드 실패하면(파일 없음) 계속 숨김
+            qrImg.onerror = function() {
+                qrContainer.classList.add('hidden');
+            };
+        }
+
+        // 이미지 슬라이더 (4장 로드)
         sliderEl.innerHTML = '';
         const imagesToLoad = [
             { name: 'screenshot1.png', type: 'pc', label: 'Main View' },
@@ -130,14 +144,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const img = document.createElement('img');
             img.src = imgPath;
             
-            // 스타일 분기: 모바일은 스마트폰 목업 느낌, PC는 전체 화면
             if (imgInfo.type === 'mobile') {
-                img.className = "max-w-[280px] mx-auto rounded-[2.5rem] border-[6px] border-gray-800 shadow-2xl block";
+                img.className = "mobile-mockup"; // style.css에 정의된 클래스 사용
             } else {
                 img.className = "w-full rounded-lg shadow-md border border-gray-200 block";
             }
 
-            // [중요] 이미지가 없으면 해당 섹션 숨김 (에러 로그 없이 깔끔하게 처리)
             img.onerror = function() { 
                 this.onerror = null; 
                 imgWrapper.style.display = 'none'; 
@@ -153,15 +165,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         projectModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // 배경 스크롤 잠금
+        document.body.style.overflow = 'hidden';
     }
 
-    // 닫기 버튼 공통 처리
+    // 모달 닫기
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', () => {
             projectModal.classList.add('hidden');
             contactModal.classList.add('hidden');
-            document.body.style.overflow = 'auto'; // 스크롤 잠금 해제
+            document.body.style.overflow = 'auto';
         });
     });
 
@@ -174,19 +186,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    // 이메일 전송 (mailto 방식)
+    // 이메일 전송 (수정됨)
     const contactForm = document.getElementById('contact-form');
     if(contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = contactForm.name.value;
-            const email = contactForm.email.value;
+            const userEmail = contactForm.email.value;
             const message = contactForm.message.value;
             
-            const subject = `[Portfolio Inquiry] Message from ${name}`;
-            const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+            // 수신자 고정
+            const recipient = "tonycho999@gmail.com";
             
-            window.location.href = `mailto:tonycho999@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            const subject = `[Portfolio Inquiry] Message from ${name}`;
+            const body = `Name: ${name}\nClient Email: ${userEmail}\n\nMessage:\n${message}`;
+            
+            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             
             setTimeout(() => {
                 contactModal.classList.add('hidden');
