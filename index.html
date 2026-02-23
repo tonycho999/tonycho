@@ -3,107 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tony Cho | Portfolio</title>
+    <meta name="description" content="Tony Cho - Full Stack Developer Portfolio">
+    <title>Tony Cho - Portfolio</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* 모달 내 스크롤바 스타일 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
-</head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-gray-100">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold tracking-tighter text-blue-900">TONY CHO</h1>
-            <button id="open-contact" class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-sm" data-lang-key="btn_contact">
+    <script src="https://pl28773486.effectivegatecpm.com/ea/ea/08/eaea08ea7f3db4e03c3e22678e83d206.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-40 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="text-xl font-bold tracking-tighter">
+                Tony<span class="text-blue-600">Cho</span>.
+            </a>
+            
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
+                <a href="#" class="hover:text-blue-600 transition" data-lang-key="nav-home">Home</a>
+                <a href="#projects" class="hover:text-blue-600 transition" data-lang-key="nav-projects">Projects</a>
+                <button id="open-contact" class="hover:text-blue-600 transition" data-lang-key="nav-contact">Contact</button>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="https://buymeacoffee.com/tonycho" target="_blank" class="bg-yellow-400 hover:bg-yellow-500 text-white text-xs font-bold px-3 py-2 rounded-full shadow-sm transition flex items-center gap-1">
+                    <i class="fas fa-coffee"></i> Support
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-20 px-6 max-w-4xl mx-auto text-center">
+        <div class="inline-block p-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mb-6">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tony" alt="Profile" class="w-24 h-24 rounded-full bg-white border-4 border-white">
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
+            <span class="gradient-text" data-lang-key="hero-title">Turning Ideas into Reality</span>
+        </h1>
+        <p class="text-lg text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed" data-lang-key="hero-desc">
+            Full-stack developer specialized in modern web technologies.
+        </p>
+        <div class="flex justify-center gap-4">
+            <a href="#projects" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition transform hover:-translate-y-1" data-lang-key="btn-projects">
+                View Projects
+            </a>
+            <button onclick="document.getElementById('open-contact').click()" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-full font-semibold transition" data-lang-key="btn-contact">
                 Contact Me
             </button>
         </div>
-    </header>
-
-    <section class="bg-gradient-to-br from-blue-800 via-indigo-900 to-purple-900 text-white py-24 px-6 text-center">
-        <div class="max-w-3xl mx-auto">
-            <p class="text-blue-200 font-semibold mb-3 text-lg flex justify-center gap-2 items-center">
-                <span data-lang-key="based">Based in Philippines</span> 
-                <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                <span data-lang-key="role">Freelance Programmer</span>
-            </p>
-            <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight" data-lang-key="intro_title">Hello, I'm Tony Cho.</h2>
-            <p class="text-xl text-blue-100 opacity-90 leading-relaxed max-w-2xl mx-auto" data-lang-key="intro_desc">
-                I build web apps that solve real business problems. Check out my works.
-            </p>
-        </div>
     </section>
 
-    <section class="py-12 px-6 max-w-6xl mx-auto min-h-screen">
-        <div class="flex flex-wrap justify-center gap-3 mb-10">
-            <button class="filter-btn bg-blue-600 text-white border-transparent px-5 py-2 rounded-full border font-medium transition shadow-sm" data-category="all" data-lang-key="btn_all">All</button>
-            <button class="filter-btn bg-white text-gray-600 border-gray-200 px-5 py-2 rounded-full border font-medium hover:bg-gray-50 transition shadow-sm" data-category="admin" data-lang-key="btn_admin">Management</button>
-            <button class="filter-btn bg-white text-gray-600 border-gray-200 px-5 py-2 rounded-full border font-medium hover:bg-gray-50 transition shadow-sm" data-category="media" data-lang-key="btn_media">Media</button>
-            <button class="filter-btn bg-white text-gray-600 border-gray-200 px-5 py-2 rounded-full border font-medium hover:bg-gray-50 transition shadow-sm" data-category="utility" data-lang-key="btn_utility">Utility</button>
-            <button class="filter-btn bg-white text-gray-600 border-gray-200 px-5 py-2 rounded-full border font-medium hover:bg-gray-50 transition shadow-sm" data-category="game" data-lang-key="btn_game">Game</button>
-        </div>
-
-        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+    <section id="projects" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
+                <h2 class="text-2xl font-bold flex items-center gap-2">
+                    <i class="fas fa-layer-group text-blue-500"></i>
+                    <span data-lang-key="nav-projects">Projects</span>
+                </h2>
+                <div class="flex bg-gray-100 p-1 rounded-lg">
+                    <button class="filter-btn bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm font-medium transition shadow-sm" data-category="all">All</button>
+                    <button class="filter-btn text-gray-600 hover:bg-white px-4 py-1.5 rounded-md text-sm font-medium transition" data-category="tool">Tools</button>
+                    <button class="filter-btn text-gray-600 hover:bg-white px-4 py-1.5 rounded-md text-sm font-medium transition" data-category="game">Games</button>
+                    <button class="filter-btn text-gray-600 hover:bg-white px-4 py-1.5 rounded-md text-sm font-medium transition" data-category="web">Web</button>
+                </div>
             </div>
+
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </div>
     </section>
 
-    <footer class="bg-white border-t py-8 text-center text-gray-500 text-sm">
-        &copy; 2026 Tony Cho. All rights reserved.
+    <footer class="bg-gray-50 py-10 border-t border-gray-200 mt-20">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-400 text-sm">© 2024 Tony Cho. <span data-lang-key="footer-rights">All rights reserved.</span></p>
+            <div class="flex gap-6">
+                <a href="#" class="text-gray-400 hover:text-gray-800 text-xl transition"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
     </footer>
 
-    <div id="project-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4 transition-opacity">
-        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col relative shadow-2xl animate-[fadeIn_0.3s_ease-out]">
-            <div class="p-5 border-b flex justify-between items-center bg-gray-50/50">
-                <h3 id="modal-title" class="text-xl font-bold text-gray-800">Project Title</h3>
-                <button class="modal-close text-gray-400 hover:text-red-500 text-3xl leading-none">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto no-scrollbar">
-                <p id="modal-desc" class="text-gray-700 mb-8 leading-relaxed text-lg border-l-4 border-blue-500 pl-4 bg-blue-50 py-2 rounded-r">Description goes here.</p>
-                <div id="modal-slider" class="space-y-6">
+    <div id="project-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity modal-close"></div>
+        <div class="relative z-10 w-full h-full flex items-center justify-center p-4 pointer-events-none">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden pointer-events-auto flex flex-col md:flex-row">
+                
+                <div class="w-full md:w-3/5 bg-gray-100 p-8 overflow-y-auto custom-scrollbar" id="modal-slider">
                     </div>
-            </div>
-            <div class="p-5 border-t flex justify-end gap-3 bg-gray-50">
-                <button class="modal-close px-5 py-2.5 text-gray-600 hover:bg-gray-200 rounded-lg transition font-medium" data-lang-key="btn_close">Close</button>
-                <a id="modal-link" href="#" target="_blank" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition flex items-center gap-2 shadow-lg shadow-blue-200">
-                    <span data-lang-key="btn_visit">Visit Site</span> 
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                </a>
+
+                <div class="w-full md:w-2/5 p-8 flex flex-col bg-white relative">
+                    <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 modal-close">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+
+                    <h3 id="modal-title" class="text-2xl font-bold mb-4 text-gray-800 mt-6 md:mt-0">Title</h3>
+                    <p id="modal-desc" class="text-gray-600 mb-8 leading-relaxed text-sm flex-1">Description</p>
+
+                    <div class="flex flex-col gap-3 mt-auto">
+                        <a id="modal-link" href="#" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-center transition shadow-md flex justify-center items-center gap-2">
+                            <span>Visit Website</span> <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        <a id="bmc-btn-modal" href="#" target="_blank" class="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-3 rounded-xl text-center transition shadow-md flex justify-center items-center gap-2">
+                            <i class="fas fa-coffee"></i> <span>Buy me a coffee</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="contact-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-8 relative shadow-2xl animate-[fadeIn_0.3s_ease-out]">
-            <button class="modal-close absolute top-5 right-5 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            
-            <h3 class="text-2xl font-bold mb-2 text-gray-800" data-lang-key="contact_title">Get In Touch</h3>
-            <p class="text-gray-500 mb-6 text-sm" data-lang-key="contact_desc">Send me a message for collaboration.</p>
-            
-            <form id="contact-form" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1" data-lang-key="label_name">Name</label>
-                    <input type="text" name="name" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-gray-50 transition-all">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1" data-lang-key="label_email">Email</label>
-                    <input type="email" name="email" value="tonycho999@gamil.com" readonly class="w-full p-3 border border-gray-200 rounded-xl bg-gray-100 text-gray-500 cursor-not-allowed select-none font-mono text-sm">
-                    <p class="text-xs text-blue-500 mt-1.5 flex items-center gap-1">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                        Fixed Recipient Address
-                    </p>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1" data-lang-key="label_message">Message</label>
-                    <textarea name="message" rows="4" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-gray-50 transition-all"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-200 transform active:scale-95" data-lang-key="btn_send">Send Message</button>
-            </form>
+    <div id="contact-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity modal-close"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 modal-close">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                
+                <h3 class="text-2xl font-bold mb-2 text-center">Get in Touch</h3>
+                <p class="text-center text-gray-500 mb-6 text-sm">Have a project in mind? Let's talk.</p>
+                
+                <form id="contact-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                        <textarea name="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-gray-800 transition shadow-lg">
+                        Send Message <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <script src="js/lang.js"></script>
     <script src="js/projects.js"></script>
     <script src="js/main.js"></script>
+
 </body>
 </html>
