@@ -63,7 +63,7 @@ const projectData = [
     },
     {
         id: "imagify",
-        folderName: "imagify", // sites.json의 name과 일치해야 함
+        folderName: "Imagify Pro", // sites.json의 name과 일치해야 함
         category: "tool",
         title: { en: "Imagify Pro", ko: "이미지파이 프로" },
         description: { 
