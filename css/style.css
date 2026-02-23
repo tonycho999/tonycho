@@ -1,0 +1,31 @@
+/* css/style.css */
+
+/* 1. 폰트 불러오기 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+/* 2. 기본 폰트 설정 */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* 3. 텍스트 그라디언트 효과 */
+.gradient-text {
+    background: linear-gradient(to right, #2563eb, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 4. 스크롤바 커스텀 */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* 5. 모달 내 모바일 이미지 스타일 (아이폰 목업 느낌) */
+.mobile-mockup {
+    max-width: 280px;
+    margin: 0 auto;
+    border-radius: 2.5rem;
+    border: 6px solid #1f2937; /* 다크 그레이 테두리 */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
