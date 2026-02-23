@@ -1,7 +1,4 @@
 [
-  { "name": "world-qr-code", "url": "https://world-qr-code.web.app/", "needsLogin": false },
-  { "name": "word-master9", "url": "https://word-master9.vercel.app/", "needsLogin": false },
-  { "name": "possystem", "url": "https://store-theta-sandy.vercel.app", "needsLogin": false },
-  { "name": "Alpha-Z-puzzle", "url": "https://alpha-z.pages.dev/", "needsLogin": false},
-  { "name": "HRproject", "url": "https://hrproject-744f0.web.app/", "needsLogin": false}
+  { "name": "Imagify Pro", "url": "https://world-qr-code.web.app/", "needsLogin": false },
+  { "name": "Alpha-Z-puzzle", "url": "https://alpha-z.pages.dev/game?diff=HARD&v=1.0/", "needsLogin": false},
 ]
