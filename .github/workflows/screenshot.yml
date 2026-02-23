@@ -1,16 +1,14 @@
 name: Auto Screenshot Bot
 
 on:
-  push:
-    paths:
-      - 'sites.json'
-  workflow_dispatch:
+  # push 설정을 지웠으므로 파일을 올려도 자동 실행되지 않습니다.
+  workflow_dispatch:  # 오직 이 버튼을 눌렀을 때만 실행됩니다.
 
 jobs:
   capture:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 리포지토리에 파일을 쓸 수 있는 권한
+      contents: write
 
     steps:
     - name: Checkout code
@@ -35,5 +33,5 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
         git add img/
-        git commit -m "🎨 Update project screenshots [skip ci]" || echo "No changes to commit"
+        git commit -m "🎨 Manual screenshot update [skip ci]" || echo "No changes to commit"
         git push
