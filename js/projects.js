@@ -60,5 +60,18 @@ const projectData = [
         },
         tech: ["Web App", "Database"],
         link: "https://hrproject-744f0.web.app/"
+    },
+    {
+        id: "imagify",
+        folderName: "imagify", // sites.json의 name과 일치해야 함
+        category: "tool",
+        title: { en: "Imagify Pro", ko: "이미지파이 프로" },
+        description: { 
+            en: "Privacy-focused image converter (HEIC/WebP to JPG/PNG) running 100% in the browser.", 
+            ko: "서버 업로드 없이 브라우저에서 100% 처리되는 보안 중심의 고성능 이미지 변환 도구입니다." 
+        },
+        tech: ["Vue.js", "WASM", "Tailwind CSS"],
+        link: "https://imagify-pro.pages.dev/"
     }
+
 ];
