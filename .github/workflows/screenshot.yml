@@ -3,12 +3,14 @@ name: Auto Screenshot Bot
 on:
   push:
     paths:
-      - 'sites.json'  # sites.json이 수정될 때 자동 실행
-  workflow_dispatch:  # 수동으로 버튼 눌러 실행 가능
+      - 'sites.json'
+  workflow_dispatch:
 
 jobs:
   capture:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 리포지토리에 파일을 쓸 수 있는 권한
 
     steps:
     - name: Checkout code
@@ -23,6 +25,9 @@ jobs:
       run: npm install puppeteer
 
     - name: Run Screenshot Bot
+      env:
+        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       run: node screenshot-bot.js
 
     - name: Commit and Push changes
@@ -30,5 +35,5 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
         git add img/
-        git commit -m "🎨 Update screenshots [skip ci]" || echo "No changes to commit"
+        git commit -m "🎨 Update project screenshots [skip ci]" || echo "No changes to commit"
         git push
