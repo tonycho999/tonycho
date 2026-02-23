@@ -1,7 +1,7 @@
 name: Auto Screenshot Bot
 
 on:
-  workflow_dispatch: # 수동 실행
+  workflow_dispatch: # 버튼 눌러서 수동 실행
 
 jobs:
   capture:
@@ -18,12 +18,15 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install Dependencies
+    - name: Install Dependencies & Chrome
       run: |
+        # 1. 패키지 설치
         npm install
-        # Puppeteer가 실행에 필요한 브라우저와 시스템 의존성을 자동으로 설치합니다.
-        npx puppeteer browsers install chrome --install-deps
-
+        
+        # 2. Chrome 브라우저 설치 (시스템 의존성 포함)
+        # 이 명령어가 우분투 버전에 맞는 라이브러리를 알아서 찾아 설치해줍니다.
+        npx puppeteer browsers install chrome
+        
     - name: Run Screenshot Bot
       env:
         ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
@@ -35,5 +38,6 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
         git add img/
+        # 변경사항이 있을 때만 커밋
         git commit -m "🎨 Update screenshots [skip ci]" || echo "No changes to commit"
         git push
