@@ -4,7 +4,7 @@ on:
   workflow_dispatch:       # 1. 수동 실행 (버튼 클릭 시 즉시 실행)
   schedule:
     # 2. 자동 스케줄 (UTC 기준 01:00 ~ 15:00 = 필리핀 09:00 ~ 23:00)
-    # 매 시간 7분에 깨어납니다.
+    # 매 시간 7분에 실행
     - cron: '7 1-15 * * *'
 
 jobs:
@@ -23,60 +23,57 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # [핵심 로직] 확률 계산 및 랜덤 딜레이
+    # [수정된 로직] 확률 계산 및 대기 시간 결정
     - name: Random Delay & Probability Check
       id: decision
       env:
         IS_MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         node -e "
+          const fs = require('fs');
+          
           // 1. 수동 실행이면 무조건 통과 (대기 없음)
           if (process.env.IS_MANUAL === 'true') {
             console.log('🔘 수동 실행 모드: 즉시 실행합니다.');
-            const fs = require('fs');
-            // GitHub Actions의 출력 변수 설정 (should_run=true)
             fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_run=true\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'sleep_time=0\n');
             process.exit(0);
           }
 
           // 2. 확률 체크 (15%)
-          // 15시간 동안 매시간 실행되므로, 15 * 0.15 = 하루 평균 약 2.25회 포스팅
           const chance = Math.random() * 100;
           console.log('🎲 확률 주사위: ' + chance.toFixed(2) + '% (목표: 15% 이하)');
 
           if (chance > 15) {
             console.log('💤 꽝! 이번 시간은 쉽니다.');
-            const fs = require('fs');
             fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_run=false\n');
-            process.exit(0);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'sleep_time=0\n');
+          } else {
+            // 3. 당첨 시 랜덤 딜레이 (0 ~ 25분 = 0 ~ 1500초)
+            const maxDelaySeconds = 25 * 60; 
+            const delaySeconds = Math.floor(Math.random() * maxDelaySeconds);
+            
+            console.log('🎉 당첨! ' + (delaySeconds / 60).toFixed(1) + '분 (' + delaySeconds + '초) 대기 후 실행합니다.');
+            
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_run=true\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'sleep_time=' + delaySeconds + '\n');
           }
-
-          // 3. 당첨 시 랜덤 딜레이 (0 ~ 25분, 100ms 단위 정밀 제어)
-          const maxDelay = 25 * 60 * 1000; // 25분 (밀리초)
-          const delay = Math.floor(Math.random() * maxDelay); 
-          // 100ms 단위로 끊기 위해 반올림 처리 (선택 사항이나 요청하신 정밀도 반영)
-          const preciseDelay = Math.floor(delay / 100) * 100;
-
-          console.log('🎉 당첨! ' + (preciseDelay / 1000 / 60).toFixed(2) + '분 대기 후 글을 올립니다...');
-          console.log('(정확한 대기 시간: ' + preciseDelay + 'ms)');
-
-          const fs = require('fs');
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_run=true\n');
-
-          // Node.js의 setTimeout으로 대기
-          setTimeout(() => {
-            console.log('⏰ 대기 시간 종료! 봇을 실행합니다.');
-          }, preciseDelay);
         "
 
-    # [실행 단계] 위 단계에서 should_run이 true일 때만 실행됨
+    # [추가됨] 실제 대기 수행 (운영체제 명령어 사용으로 확실하게 멈춤)
+    - name: Sleep for Random Delay
+      if: steps.decision.outputs.should_run == 'true' && steps.decision.outputs.sleep_time != '0'
+      run: sleep ${{ steps.decision.outputs.sleep_time }}
+
+    # [실행 단계] 위 단계 통과 시 실행
     - name: Run X Bot
       if: steps.decision.outputs.should_run == 'true'
       env:
-        # Secrets 설정 (이전 단계에서 설정한 키들)
-        X_API_KEY: ${{ secrets.X_API_KEY }}
-        X_API_SECRET: ${{ secrets.X_API_SECRET }}
-        X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-        X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        # ⚠️ [중요 수정] 스크린샷에 있는 Secret 이름과 정확히 매칭했습니다.
+        X_API_KEY: ${{ secrets.API_KEY }}
+        X_API_SECRET: ${{ secrets.API_SECRET }}
+        X_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        # 스크린샷에 ACCESS_TOKEN_SECRET 이라고 되어 있어서 그것으로 연결
+        X_ACCESS_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }} 
         GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       run: node x-bot.js
