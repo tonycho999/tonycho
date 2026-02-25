@@ -1,12 +1,14 @@
 {
-  "name": "portfolio-screenshot-bot",
+  "name": "portfolio-x-bot",
   "version": "1.0.0",
-  "description": "Auto Screenshot Bot",
-  "main": "screenshot-bot.js",
+  "description": "Auto X (Twitter) Posting Bot with Groq AI",
+  "main": "x-bot.js",
   "dependencies": {
-    "puppeteer": "latest"
+    "twitter-api-v2": "^1.15.0",
+    "groq-sdk": "^0.3.3",
+    "dotenv": "^16.3.1"
   },
   "scripts": {
-    "start": "node screenshot-bot.js"
+    "start": "node x-bot.js"
   }
 }
