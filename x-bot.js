@@ -108,20 +108,30 @@ async function run() {
             }
         }
 
-        // 4. Groq AI에게 글 작성 요청
+        // [수정된 부분] 4. 사용 가능한 모델 리스트 조회 및 자동 선택
+        console.log("🔍 사용 가능한 AI 모델 검색 중...");
+        const modelList = await groq.models.list();
+        
+        // 리스트에서 첫 번째 모델 ID를 자동으로 가져옵니다. (하드코딩 X)
+        // 보통 리스트의 첫 번째나 두 번째에 최신 LLM이 위치합니다.
+        const autoSelectedModel = modelList.data[0].id;
+        
+        console.log(`🤖 자동 선택된 AI 모델: ${autoSelectedModel}`);
+
+        // 5. Groq AI에게 글 작성 요청
         const chatCompletion = await groq.chat.completions.create({
             messages: [
                 { role: "system", content: SYSTEM_PROMPT },
                 { role: "user", content: prompt }
             ],
-            model: "llama3-70b-8192",
+            model: autoSelectedModel, // 여기서 변수를 사용함
             temperature: 0.85,
         });
 
         const tweetText = chatCompletion.choices[0]?.message?.content || "";
         console.log(`📝 생성된 트윗:\n${tweetText}\n`);
 
-        // 5. 트윗 전송
+        // 6. 트윗 전송
         if (imagePath) {
             console.log("📤 이미지 업로드 중...");
             const mediaId = await client.v1.uploadMedia(imagePath);
