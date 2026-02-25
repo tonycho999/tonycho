@@ -1,13 +1,15 @@
-name: Auto Screenshot Bot
+name: Auto X Marketing Bot
 
 on:
-  workflow_dispatch: # 버튼 눌러서 수동 실행
+  workflow_dispatch:       # 1. 수동 실행 (버튼 클릭 시 즉시 실행)
+  schedule:
+    # 2. 자동 스케줄 (UTC 기준 01:00 ~ 15:00 = 필리핀 09:00 ~ 23:00)
+    # 매 시간 7분에 깨어납니다.
+    - cron: '7 1-15 * * *'
 
 jobs:
-  capture:
+  post-tweet:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
     - name: Checkout code
@@ -18,26 +20,63 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install Dependencies & Chrome
-      run: |
-        # 1. 패키지 설치
-        npm install
-        
-        # 2. Chrome 브라우저 설치 (시스템 의존성 포함)
-        # 이 명령어가 우분투 버전에 맞는 라이브러리를 알아서 찾아 설치해줍니다.
-        npx puppeteer browsers install chrome
-        
-    - name: Run Screenshot Bot
-      env:
-        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
-        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-      run: node screenshot-bot.js
+    - name: Install dependencies
+      run: npm install
 
-    - name: Commit and Push changes
+    # [핵심 로직] 확률 계산 및 랜덤 딜레이
+    - name: Random Delay & Probability Check
+      id: decision
+      env:
+        IS_MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action Bot"
-        git add img/
-        # 변경사항이 있을 때만 커밋
-        git commit -m "🎨 Update screenshots [skip ci]" || echo "No changes to commit"
-        git push
+        node -e "
+          // 1. 수동 실행이면 무조건 통과 (대기 없음)
+          if (process.env.IS_MANUAL === 'true') {
+            console.log('🔘 수동 실행 모드: 즉시 실행합니다.');
+            const fs = require('fs');
+            // GitHub Actions의 출력 변수 설정 (should_run=true)
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_run=true\n');
+            process.exit(0);
+          }
+
+          // 2. 확률 체크 (15%)
+          // 15시간 동안 매시간 실행되므로, 15 * 0.15 = 하루 평균 약 2.25회 포스팅
+          const chance = Math.random() * 100;
+          console.log('🎲 확률 주사위: ' + chance.toFixed(2) + '% (목표: 15% 이하)');
+
+          if (chance > 15) {
+            console.log('💤 꽝! 이번 시간은 쉽니다.');
+            const fs = require('fs');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_run=false\n');
+            process.exit(0);
+          }
+
+          // 3. 당첨 시 랜덤 딜레이 (0 ~ 25분, 100ms 단위 정밀 제어)
+          const maxDelay = 25 * 60 * 1000; // 25분 (밀리초)
+          const delay = Math.floor(Math.random() * maxDelay); 
+          // 100ms 단위로 끊기 위해 반올림 처리 (선택 사항이나 요청하신 정밀도 반영)
+          const preciseDelay = Math.floor(delay / 100) * 100;
+
+          console.log('🎉 당첨! ' + (preciseDelay / 1000 / 60).toFixed(2) + '분 대기 후 글을 올립니다...');
+          console.log('(정확한 대기 시간: ' + preciseDelay + 'ms)');
+
+          const fs = require('fs');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_run=true\n');
+
+          // Node.js의 setTimeout으로 대기
+          setTimeout(() => {
+            console.log('⏰ 대기 시간 종료! 봇을 실행합니다.');
+          }, preciseDelay);
+        "
+
+    # [실행 단계] 위 단계에서 should_run이 true일 때만 실행됨
+    - name: Run X Bot
+      if: steps.decision.outputs.should_run == 'true'
+      env:
+        # Secrets 설정 (이전 단계에서 설정한 키들)
+        X_API_KEY: ${{ secrets.X_API_KEY }}
+        X_API_SECRET: ${{ secrets.X_API_SECRET }}
+        X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+        X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      run: node x-bot.js
