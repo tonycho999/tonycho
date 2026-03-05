@@ -186,28 +186,48 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    // 이메일 전송 (수정됨)
+    // 이메일 전송 (Formspree API 적용)
     const contactForm = document.getElementById('contact-form');
     if(contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = contactForm.name.value;
-            const userEmail = contactForm.email.value;
-            const message = contactForm.message.value;
             
-            // 수신자 고정
-            const recipient = "tonycho999@gmail.com";
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
             
-            const subject = `[Portfolio Inquiry] Message from ${name}`;
-            const body = `Name: ${name}\nClient Email: ${userEmail}\n\nMessage:\n${message}`;
-            
-            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            
-            setTimeout(() => {
-                contactModal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-                contactForm.reset();
-            }, 1000);
+            // 전송 중 상태 표시 (버튼 비활성화)
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>${currentLang === 'ko' ? "전송 중..." : "Sending..."}</span> <i class="fas fa-spinner fa-spin"></i>`;
+
+            const formData = new FormData(contactForm);
+
+            try {
+                // Formspree API 호출 (백그라운드 전송)
+                const response = await fetch("https://formspree.io/f/tonycho999@gmail.com", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // 전송 성공 시 알림 및 초기화
+                    alert(currentLang === 'ko' ? "성공적으로 전송되었습니다!" : "Message sent successfully!");
+                    contactForm.reset();
+                    contactModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                } else {
+                    throw new Error('Response not ok');
+                }
+            } catch (error) {
+                console.error("Email Error:", error);
+                alert(currentLang === 'ko' ? "오류가 발생했습니다. 다시 시도해 주세요." : "Oops! There was a problem sending your message.");
+            } finally {
+                // 전송 완료 후 버튼 복구
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
         });
     }
 });
