@@ -93,7 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const linkEl = document.getElementById('modal-link');
     const sliderEl = document.getElementById('modal-slider');
     
-    // [추가됨] QR 코드 엘리먼트
     const qrContainer = document.getElementById('qr-container');
     const qrImg = document.getElementById('modal-qr');
 
@@ -107,27 +106,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const bmcBtn = document.getElementById('bmc-btn-modal');
         if(bmcBtn) bmcBtn.href = "https://buymeacoffee.com/tonycho";
 
-        // [QR 코드 처리 로직]
         if(qrImg && qrContainer) {
-            // 초기화: 일단 숨김
             qrContainer.classList.add('hidden');
             qrImg.src = '';
-            
-            // 이미지 경로 설정
             const qrPath = `img/${project.folderName}/QR.png`;
             qrImg.src = qrPath;
-
-            // 이미지가 성공적으로 로드되면 보임
             qrImg.onload = function() {
                 qrContainer.classList.remove('hidden');
             };
-            // 로드 실패하면(파일 없음) 계속 숨김
             qrImg.onerror = function() {
                 qrContainer.classList.add('hidden');
             };
         }
 
-        // 이미지 슬라이더 (4장 로드)
         sliderEl.innerHTML = '';
         const imagesToLoad = [
             { name: 'screenshot1.png', type: 'pc', label: 'Main View' },
@@ -145,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
             img.src = imgPath;
             
             if (imgInfo.type === 'mobile') {
-                img.className = "mobile-mockup"; // style.css에 정의된 클래스 사용
+                img.className = "mobile-mockup"; 
             } else {
                 img.className = "w-full rounded-lg shadow-md border border-gray-200 block";
             }
@@ -168,7 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.overflow = 'hidden';
     }
 
-    // 모달 닫기
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', () => {
             projectModal.classList.add('hidden');
@@ -177,7 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Contact 모달 열기
     const openContactBtn = document.getElementById('open-contact');
     if(openContactBtn) {
         openContactBtn.addEventListener('click', () => {
@@ -186,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    // 이메일 전송 (Formspree API 적용)
+    // START OF MODIFIED EMAIL SENDING LOGIC
     const contactForm = document.getElementById('contact-form');
     if(contactForm) {
         contactForm.addEventListener('submit', async (e) => {
@@ -195,14 +184,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
             
-            // 전송 중 상태 표시 (버튼 비활성화)
+            // UI state: Disable button and show sending status
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<span>${currentLang === 'ko' ? "전송 중..." : "Sending..."}</span> <i class="fas fa-spinner fa-spin"></i>`;
 
             const formData = new FormData(contactForm);
 
             try {
-                // Formspree API 호출 (백그라운드 전송)
+                // Call Formspree API for background sending
                 const response = await fetch("https://formspree.io/f/tonycho999@gmail.com", {
                     method: "POST",
                     body: formData,
@@ -212,7 +201,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 if (response.ok) {
-                    // 전송 성공 시 알림 및 초기화
                     alert(currentLang === 'ko' ? "성공적으로 전송되었습니다!" : "Message sent successfully!");
                     contactForm.reset();
                     contactModal.classList.add('hidden');
@@ -224,10 +212,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Email Error:", error);
                 alert(currentLang === 'ko' ? "오류가 발생했습니다. 다시 시도해 주세요." : "Oops! There was a problem sending your message.");
             } finally {
-                // 전송 완료 후 버튼 복구
+                // Restore button state
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
             }
         });
     }
+    // END OF MODIFIED EMAIL SENDING LOGIC
 });
